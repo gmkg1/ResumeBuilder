@@ -31,7 +31,69 @@ questions = [
     "Would you like to add another project? (yes/no)",
     "All done! Generating your resume now..."
 ]
+resume_examples = """
+    Example Resume 1:
+    
+    ------------------------------
+    Name: John Doe
+    Email: johndoe@example.com
+    Phone: +91 9876543210
+    LinkedIn: linkedin.com/in/johndoe
+    GitHub: github.com/johndoe
+    ------------------------------
 
+    **About Me**  
+    A passionate software developer skilled in Python, Django, and full-stack web development. I enjoy building scalable applications and solving real-world problems through technology.
+
+    **Education**  
+    - Bachelor of Computer Applications, XYZ University (2022-2025)  
+
+    **Skills**  
+    - Programming: Python, Java, C++  
+    - Web Development: HTML, CSS, JavaScript, Django  
+    - Tools: Git, Docker, Postman  
+
+    **Certifications**  
+    - Google Cybersecurity Certificate (ID: GCS12345)  
+    - CompTIA Security+ (ID: XYZ12345)  
+
+    **Projects**  
+    - **AI Resume Generator** - Built a chatbot-powered resume builder using Flask and Groq API.  
+    - **E-commerce Website** - Developed a full-stack e-commerce site with Django.  
+
+    ------------------------------
+    
+    Example Resume 2:
+    
+    ------------------------------
+    Name: Jane Smith  
+    Email: janesmith@example.com  
+    Phone: +91 8765432109  
+    LinkedIn: linkedin.com/in/janesmith  
+    GitHub: github.com/janesmith  
+    ------------------------------
+
+    **About Me**  
+    Data Science enthusiast with a strong foundation in machine learning, deep learning, and data visualization. Passionate about leveraging AI for impactful solutions.
+
+    **Education**  
+    - Master of Data Science, ABC University (2020-2022)  
+
+    **Skills**  
+    - Data Science: Machine Learning, Deep Learning, NLP  
+    - Programming: Python, R, SQL  
+    - Tools: TensorFlow, Scikit-Learn, Power BI  
+
+    **Certifications**  
+    - Microsoft AI Engineer Certificate (ID: AIENG456)  
+    - AWS Certified Data Analyst (ID: AWSDA789)  
+
+    **Projects**  
+    - **Chatbot for Customer Support** - Created an NLP-based chatbot to handle queries.  
+    - **Stock Price Prediction** - Used ML models to predict stock prices.  
+
+    ------------------------------
+    """
 @app.route('/')
 def index():
     session.clear()  
@@ -177,7 +239,7 @@ def generate_resume():
     response = client.chat.completions.create(
         model="llama3-8b-8192",
         messages=[
-            {"role": "system", "content": "You are a professional resume generator. Format the response as a polished with text decorations and paragraph seperations write in dtailed everydetail must have a minimum of 10 words, well-structured resume with clear sections, dont add new line in the same section, bullet points, and professional formatting. Ensure readability, proper alignment, and a concise presentation of information seperate each line after 7 words. 'DONT' include your intro part into the resume. i need only the info of the user into the resume"},
+            {"role": "system", "content": f"You are a professional resume generator. Format the response as a polished with text decorations and paragraph seperations write in detailed everydetail must have a minimum of 10 words , well-structured resume with clear sections, dont add new line in the same section, bullet points, and professional formatting. Ensure readability, proper alignment, and a concise presentation of information seperate each line after 7 words. 'DONT' include your intro part into the resume. Follow the following examples{resume_examples}"},
             {"role": "user", "content": json.dumps(data, indent=2)}
         ]
     )
