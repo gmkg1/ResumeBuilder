@@ -11,6 +11,7 @@ py builder.py runserver
 Open the provided URL in your browser and start building your resume!
 
 🛠️ Tech Stack
-🔹 Python | Flask | Groq API | HTML | PDF Generation
+🔹 Python | Flask | Groq API | PDF Generation using fpdf
+
 
 
