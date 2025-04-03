@@ -5,12 +5,11 @@ import json
 from fpdf import FPDF
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Required for session management
+app.secret_key = 'your_secret_key' 
 
-# Initialize Groq Client
-client = groq.Client(api_key="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")  # Replace with your actual API key
+client = groq.Client(api_key="your api key")
 
-# Chatbot Questions
+
 questions = [
     "Hi there! I'm ResumeBot. Let's build your resume! What is your name?",
     "Great! What is your email?",
@@ -35,7 +34,7 @@ questions = [
 
 @app.route('/')
 def index():
-    session.clear()  # Clear session on start
+    session.clear()  
     session['step'] = 0
     session['data'] = {
         "name": "",
@@ -77,7 +76,7 @@ def chat():
     elif step == 6:  
         data['skills'].append({"mainskill": user_input})
 
-        # Fetch subskills from Groq API
+        
         response = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[
@@ -105,65 +104,65 @@ def chat():
             session['step'] = 9  
             return jsonify({"question": questions[9]})
 
-    elif step == 9:  # Do you have any certifications?
+    elif step == 9:  
         if user_input == 'yes':
             session['step'] = 10
             return jsonify({"question": questions[10]})  
         else:
-            session['step'] = 14  # Skip to projects
+            session['step'] = 14  
             return jsonify({"question": questions[14]})
 
-    elif step == 10:  # Enter the certificate name
-        data['certifications'].append({"name": user_input})  # ✅ Fix: Add a new certificate entry
+    elif step == 10:  
+        data['certifications'].append({"name": user_input})  
         session['step'] = 11
         return jsonify({"question": questions[11]})
 
-    elif step == 11:  # Enter the certificate ID
-        if not data['certifications']:  # Prevent IndexError
+    elif step == 11:  
+        if not data['certifications']:  
             return jsonify({"question": "Error: Please enter the certificate name first."})
         data['certifications'][-1]['id'] = user_input
         session['step'] = 12
         return jsonify({"question": questions[12]})
 
-    elif step == 12:  # Enter certification source
-        if not data['certifications']:  # Prevent IndexError
+    elif step == 12:  
+        if not data['certifications']: 
             return jsonify({"question": "Error: Please enter the certificate name first."})
         data['certifications'][-1]['source'] = user_input
         session['step'] = 13
         return jsonify({"question": questions[13]})
 
-    elif step == 13:  # Add another certification?
+    elif step == 13:  
         if user_input == 'no':
             session['step'] = 14
             return jsonify({"question": questions[14]})  
         else:
-            session['step'] = 10  # Restart certification entry
+            session['step'] = 10  
             return jsonify({"question": questions[10]})
-    elif step == 14:  # Ask for project name
-        data['projects'].append({"name": user_input})  # ✅ Fix: Add a new project entry
+    elif step == 14:  
+        data['projects'].append({"name": user_input})  
         session['step'] = 15
         return jsonify({"question": questions[15]})
 
-    elif step == 15:  # Ask for project description
-        if not data['projects']:  # Prevent IndexError
+    elif step == 15:  
+        if not data['projects']:  
             return jsonify({"question": "Error: Please enter the project name first."})
         data['projects'][-1]['description'] = user_input
         session['step'] = 16
         return jsonify({"question": questions[16]})
 
-    elif step == 16:  # Ask for project technologies
-        if not data['projects']:  # Prevent IndexError
+    elif step == 16:  
+        if not data['projects']:  
             return jsonify({"question": "Error: Please enter the project name first."})
         data['projects'][-1]['technologies'] = user_input.split(", ")
         session['step'] = 17
         return jsonify({"question": questions[17]})
 
-    elif step == 17:  # Ask if user wants to add another project
+    elif step == 17: 
         if user_input == 'no':
-            session['step'] = 18  # Move to the next section
+            session['step'] = 18  
             return jsonify({"question": questions[18]})  
         else:
-            session['step'] = 14  # Restart project entry
+            session['step'] = 14  
             return jsonify({"question": questions[14]})
 
     session['step'] += 1
